@@ -1,6 +1,6 @@
-const fs = require('fs')
-const path = require('path')
-const filePath = process.argv[2]
+const fs = require('fs');
+const path = require('path');
+const filePath = process.argv[2];
 
 const STOP_WORDS = [
   'a',
@@ -11,6 +11,7 @@ const STOP_WORDS = [
   'at',
   'be',
   'by',
+  'but',
   'for',
   'from',
   'has',
@@ -22,27 +23,44 @@ const STOP_WORDS = [
   'its',
   'of',
   'on',
+  'our',
   'that',
+  'this',
   'the',
   'to',
+  'us',
+  'we',
   'were',
   'will',
   'with',
-]
+];
 
-function printWordFreq(file, callback) {
-  // Read in `file` and print out the frequency of words in that file.
+function printWordFreq(file) {
   fs.readFile(file, 'utf8', (err, data) => {
     if (err) {
-      console.error('Error reading the file:', err)
-      process.exit(1)
+      console.error('Error reading the file:', err);
+      return;
     }
-    // TODO: write code to count the words in the file
-    console.log('Initial data read from file: ', data)
-    callback('Your word count results should be passed in to this callback')
-  })
+
+    // Text processing
+    const wordCounts = {};
+    const words = data
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") // Remove punctuation
+      .toLowerCase() // Convert to lowercase
+      .split(/\s+/); // Split by whitespace
+
+    for (const word of words) {
+      if (!STOP_WORDS.includes(word)) {
+        wordCounts[word] = (wordCounts[word] || 0) + 1;
+      }
+    }
+
+    // Sort and Display results
+    const sortedWords = Object.keys(wordCounts).sort((a, b) => wordCounts[b] - wordCounts[a]);
+    for (const word of sortedWords) {
+      console.log(`${word.padEnd(20)} | ${wordCounts[word]} ${'*'.repeat(wordCounts[word])}`);
+    }
+  });
 }
 
-printWordFreq(filePath, (wordCount) => {
-  console.log('The results from your word counts:', wordCount)
-})
+printWordFreq(filePath);
