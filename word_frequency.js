@@ -11,7 +11,6 @@ const STOP_WORDS = [
   'at',
   'be',
   'by',
-  'but',
   'for',
   'from',
   'has',
@@ -23,17 +22,13 @@ const STOP_WORDS = [
   'its',
   'of',
   'on',
-  'our',
   'that',
-  'this',
   'the',
   'to',
-  'us',
-  'we',
   'were',
   'will',
   'with',
-];
+]
 
 function printWordFreq(file) {
   fs.readFile(file, 'utf8', (err, data) => {
